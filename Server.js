@@ -22,17 +22,17 @@ wsServer.on('request', function(request) {
       if(reason === "New User Request") {
         for(var i = 0; i < users.length; i++) {
           if(users[i]===username) {
-            connection.sendUTF("Already Exists")
+            connection.sendUTF(JSON.stringify({"Reason": "New User Request", "Status": "Denied"}))
           }
         }
         if(newuser) {
           users.push(username);
-          connection.sendUTF("Approved")
+          connection.sendUTF(JSON.stringify({"Reason": "New User Request", "Status": "Approved"}))
           console.log(users);
         }
       } else if(reason === "Message Request") {
           for(var i = 0; i < connections.length; i++) {
-            connecitons[i].sendUTF(msg);
+            connecitons[i].sendUTF(JSON.stringify({"Reason": "Message Request", "Status": "Approved"}));
           }
       }
     });
