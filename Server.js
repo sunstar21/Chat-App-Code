@@ -19,21 +19,25 @@ wsServer.on('request', function(request) {
       console.log(msg)
       var reason = info.Reason;
       var newuser = true;
+      var sucessful = true;
       if(reason === "New User Request") {
         for(var i = 0; i < users.length; i++) {
           if(users[i]===username) {
+            sucessful = false;
             connection.sendUTF(JSON.stringify({"Reason": "New User Request", "Status": "Denied"}))
           }
         }
-        if(newuser) {
+        if(newuser&&sucessful) {
           users.push(username);
           connection.sendUTF(JSON.stringify({"Reason": "New User Request", "Status": "Approved"}))
           console.log(users);
         }
       } else if(reason === "Message Request") {
-          for(var i = 0; i < connections.length; i++) {
-            connecitons[i].sendUTF(JSON.stringify({"Reason": "Message Request", "Status": "Approved"}));
-          }
+          if(msg.length>2) { 
+            for(var i = 0; i < connections.length; i++) {
+              connections[i].sendUTF(JSON.stringify({"Reason": "Message Request", "Status": "Approved", "Message": msg, "Username": username}));
+            }
+        }
       }
     });
 });
