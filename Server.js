@@ -11,12 +11,9 @@ wsServer.on('request', function(request) {
     const connection = request.accept(null, request.origin);
     connections.push(connection)
     connection.on('message', function(message) {
-      console.log('Received Message:', message.utf8Data);
       const info = JSON.parse(message.utf8Data);
       var username = info.Username;
-      console.log(username);
       var msg = info.Message;
-      console.log(msg)
       var reason = info.Reason;
       var newuser = true;
       var sucessful = true;
@@ -33,7 +30,7 @@ wsServer.on('request', function(request) {
           console.log(users);
         }
       } else if(reason === "Message Request") {
-          if(msg.length>2) { 
+          if(msg.length>1) { 
             for(var i = 0; i < connections.length; i++) {
               connections[i].sendUTF(JSON.stringify({"Reason": "Message Request", "Status": "Approved", "Message": msg, "Username": username}));
             }
